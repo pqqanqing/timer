@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
+
+    <description>spring hessian configuration</description>
+
+    <bean name="/query" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="queryService"/>
+        <property name="serviceInterface" value="com.wjs.common.base.query.QueryService"/>
+    </bean>
+
+    <bean name="/timer" class="org.springframework.remoting.caucho.HessianServiceExporter">
+        <property name="service" ref="timerFacade"/>
+        <property name="serviceInterface" value="com.wjs.timer.api.facade.TimerFacade"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,52 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.wjs.timer</groupId>
+        <artifactId>timer</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
+    </parent>
+
+    <name>timer-war-inrpc</name>
+    <description>timer-war-inrpc pom file</description>
+
+    <artifactId>timer-war-inrpc</artifactId>
+    <packaging>war</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.wjs.timer</groupId>
+            <artifactId>timer-service</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>weixin2d-inrpc</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <port>8081</port>
+                    <path>/timer-inrpc</path>
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <finalName>timer</finalName>
+                    <server>tomcat7</server>
+                    <contextReloadable>true</contextReloadable>
+                    <contextFile>src/test/resources/context.xml</contextFile>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

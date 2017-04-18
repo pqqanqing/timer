@@ -3,10 +3,85 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.wjs.root</groupId>
+        <artifactId>root</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
+    </parent>
+
+    <name>timer</name>
+    <description>timer module file</description>
 
     <groupId>com.wjs.timer</groupId>
     <artifactId>timer</artifactId>
     <version>1.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
+    <modules>
+        <module>timer-api</module>
+        <module>timer-common</module>
+        <module>timer-domain</module>
+        <module>timer-rpt</module>
+        <module>timer-service</module>
+        <module>timer-war-inrpc</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>repository.jboss.org-public</id>
+            <name>JBoss repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
+
+    <properties>
+        <version.common>1.1.0-SNAPSHOT</version.common>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.wjs.common</groupId>
+                <artifactId>common-base</artifactId>
+                <version>${version.common}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.wjs.common</groupId>
+                <artifactId>common-orm</artifactId>
+                <version>${version.common}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!--<scm>
+        <connection>
+            scm:svn:https://192.168.228.232/svn/wjs/trunk/timer
+        </connection>
+        <developerConnection>
+            scm:svn:https://192.168.228.232/svn/wjs/trunk/timer
+        </developerConnection>
+    </scm>-->
+
+    <build>
+        <plugins>
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.5.1</version>
+                <configuration>
+                    <tagBase>https://192.168.228.232/svn/wjs/tags/timer</tagBase>
+                </configuration>
+            </plugin>-->
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
