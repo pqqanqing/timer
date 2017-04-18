@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    					http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+   						http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+
+   						http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+   						http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <description>application configuration</description>
+
+    <bean id="propertyConfigurer"
+          class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="locations">
+            <list>
+                <value>file:/Users/panqingqing/githubWorkspaces/config/timer/sc.properties</value>
+            </list>
+        </property>
+    </bean>
+
+    <!-- spring上下文 -->
+    <bean id="springBeanContext" class="com.wjs.common.base.spring.SpringBeanContext"/>
+
+    <!-- queryService查询接口 -->
+    <bean id="queryService" class="com.wjs.common.base.query.QueryServiceImpl">
+        <property name="queryBuilderMap">
+            <map></map>
+        </property>
+    </bean>
+
+    <context:component-scan
+            base-package="com.wjs.timer.facade,com.wjs.timer.service,com.wjs.timer.rpt">
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service"/>
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!--<jee:jndi-lookup id="dataSource" jndi-name="java:comp/env/jdbc/ds_timer"/>-->
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${mysql.driverClassName}"/>
+        <property name="url" value="${mysql.url}"/>
+        <property name="username" value="${mysql.username}"/>
+        <property name="password" value="${mysql.password}"/>
+    </bean>
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <!--扫描配置文件-->
+        <property name="mappingLocations">
+            <list>
+                <value>classpath*:hbm/*.hbm.xml</value>
+                <value>classpath*:usertype/*.hbm.xml</value>
+            </list>
+        </property>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">${hibernate.dialect}</prop>
+                <prop key="hibernate.show_sql">${hibernate.show_sql}</prop>
+                <prop key="hibernate.format_sql">${hibernate.format_sql}</prop>
+                <prop key="hibernate.hbm2ddl.auto">${hibernate.hbm2ddl.auto}</prop>
+                <prop key="current_session_context_class">${hibernate.current_session_context_class}</prop>
+                <!-- 用terracotta和ehcache分布式缓存就关闭hibernate二级缓存 -->
+                <!--开启二级缓存 ehcache-->
+                <prop key="hibernate.cache.use_second_level_cache">${hibernate.cache.use_second_level_cache}</prop>
+                <prop key="hibernate.cache.use_query_cache">${hibernate.cache.use_query_cache}</prop>
+                <prop key="hibernate.cache.region.factory_class">${hibernate.cache.region.factory_class}</prop>
+                <prop key="hibernate.cache.provider_configuration_file_resource_path">
+                    ${hibernate.cache.provider_configuration_file_resource_path}
+                </prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="persistenceExceptionTranslationPostProcessor"
+          class="org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor"/>
+
+    <!-- 注解开启事务 -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <!-- 导入项目配置文件地址 -->
+    <bean class="com.wjs.common.base.properties.ProjectProperties">
+        <property name="properties">
+            <util:properties location="file:/Users/panqingqing/githubWorkspaces/config/timer/sc.properties"/>
+        </property>
+    </bean>
+
+    <bean id="monitorInterceptor" class="com.wjs.common.base.interceptor.MonitorInterceptor"/>
+    <aop:config>
+        <aop:pointcut id="monitorServiceMethods"
+                      expression="execution(* com.wjs.timer.service.*..*.*(..)) or execution(* com.wjs.timer.rpt.*..*.*(..))"/>
+        <aop:advisor pointcut-ref="monitorServiceMethods" advice-ref="monitorInterceptor"/>
+    </aop:config>
+
+</beans>

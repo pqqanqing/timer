@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-access="field">
+    <typedef name="requestType" class="com.wjs.common.orm.hibernate.usertype.StatusAndClassNumUserType">
+        <param name="usertype">com.wjs.common.base.request.Request</param>
+    </typedef>
+
+    <typedef name="taskHistoryStatus" class="com.wjs.common.orm.hibernate.usertype.StatusAndClassNumUserType">
+        <param name="usertype">com.wjs.timer.domain.history.status.TaskHistoryStatus</param>
+    </typedef>
+
+</hibernate-mapping>

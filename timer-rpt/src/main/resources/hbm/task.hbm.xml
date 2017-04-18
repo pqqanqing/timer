@@ -1,0 +1,95 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping default-access="field">
+    <class name="com.wjs.timer.domain.task.Task" table="TB_TASK" batch-size="100" schema="timer_database" where="logic_delete = 0">
+        <!--<cache usage="read-only" />-->
+        <comment>业务表</comment>
+        <id name="id" access="property">
+            <column name="id" not-null="true" length="20">
+                <comment>主键</comment>
+            </column>
+            <generator class="identity"/>
+        </id>
+        <version name="version" type="long">
+            <column name="version" default="0" not-null="true">
+                <comment>版本号</comment>
+            </column>
+        </version>
+        <property name="createTime" type="timestamp" update="false">
+            <column name="create_time" not-null="true" length="50">
+                <comment>创建时间</comment>
+            </column>
+        </property>
+        <property name="updateTime" type="timestamp">
+            <column name="update_time" not-null="true" length="50">
+                <comment>更新时间</comment>
+            </column>
+        </property>
+        <property name="logicDelete">
+            <column name="logic_delete" not-null="true" default="0">
+                <comment>是否已逻辑删除</comment>
+            </column>
+        </property>
+        <property name="name">
+            <column name="name" length="255">
+                <comment>名称</comment>
+            </column>
+        </property>
+        <many-to-one name="module">
+            <column name="module_id" not-null="true">
+                <comment>模块外键</comment>
+            </column>
+        </many-to-one>
+        <property name="url">
+            <column name="url" not-null="true">
+                <comment>业务url</comment>
+            </column>
+        </property>
+        <property name="code">
+            <column name="code" not-null="true">
+                <comment>业务码</comment>
+            </column>
+        </property>
+        <property name="overtime">
+            <column name="overtime">
+                <comment>超时时间</comment>
+            </column>
+        </property>
+        <property name="cronExpression">
+            <column name="cron_expression" not-null="true">
+                <comment>cron表达式</comment>
+            </column>
+        </property>
+        <property name="triggerGroup">
+            <column name="trigger_group" not-null="true" unique-key="uk_group_name" index="id_group_name">
+                <comment>触发器组</comment>
+            </column>
+        </property>
+        <property name="triggerName">
+            <column name="trigger_name" not-null="true" unique-key="uk_group_name" index="id_group_name">
+                <comment>触发器名</comment>
+            </column>
+        </property>
+        <property name="jobGroup">
+            <column name="job_group" not-null="true">
+                <comment>作业组</comment>
+            </column>
+        </property>
+        <property name="jobName">
+            <column name="job_name" not-null="true">
+                <comment>作业名</comment>
+            </column>
+        </property>
+        <property name="request" type="requestType">
+            <column name="request" not-null="true">
+                <comment>请求调用方式</comment>
+            </column>
+        </property>
+        <bag name="taskHistorys" cascade="all" inverse="true" batch-size="100" where="logic_delete=0"
+             order-by="create_time desc">
+            <key column="task_id"/>
+            <one-to-many class="com.wjs.timer.domain.history.TaskHistory"/>
+        </bag>
+    </class>
+</hibernate-mapping>
