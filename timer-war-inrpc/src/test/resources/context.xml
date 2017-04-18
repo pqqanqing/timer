@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context antiResourceLocking="false" privileged="true">
+
+  <Resource name="jdbc/ds_timer" auth="Container"
+            type="javax.sql.DataSource" driverClassName="com.mysql.jdbc.Driver"
+            url="jdbc:mysql://localhost:3306/timer_database"
+            username="timer"
+            password="timer"
+            initialSize="20"
+            maxActive="200"
+            maxIdle="100"
+            minIdle="20"
+            testOnBorrow="true"
+            testOnReturn="true"
+            testWhileIdle="true"
+            timeBetweenEvictionRunsMillis="600000"
+            numTestsPerEvictionRun="10"
+            minEvictableIdleTimeMillis="21600000"
+            maxWait="10000"/>
+
+</Context>
